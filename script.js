@@ -342,6 +342,10 @@ class ApplePuzzleGame {
             clearInterval(this.timerInterval);
             this.timerInterval = null;
         }
+        
+        // Stop background music when game ends
+        this.stopBackgroundMusic();
+        
         document.getElementById('gameState').textContent = 'ended';
         document.getElementById('finalScore').textContent = this.score;
         document.getElementById('gameOverModal').style.display = 'block';
@@ -368,6 +372,9 @@ class ApplePuzzleGame {
         document.getElementById('newGameBtn').disabled = true;
         document.getElementById('newGameBtn').textContent = '게임 진행 중...';
         
+        // Start background music when game starts
+        this.startBackgroundMusic();
+        
         this.generateApples();
         this.updateScore();
         this.updateSelectionDisplay();
@@ -393,6 +400,9 @@ class ApplePuzzleGame {
             this.timerInterval = null;
         }
         
+        // Stop background music when returning to start screen
+        this.stopBackgroundMusic();
+        
         // Reset game state
         this.gameState = 'ready';
         this.isDragging = false;
@@ -416,6 +426,20 @@ class ApplePuzzleGame {
                 this.backgroundMusic.play().catch(e => console.log('Audio play failed:', e));
             }
         }, { once: true });
+    }
+
+    startBackgroundMusic() {
+        if (!this.isMuted && this.backgroundMusic) {
+            this.backgroundMusic.currentTime = 0; // Reset to beginning
+            this.backgroundMusic.play().catch(e => console.log('Background music play failed:', e));
+        }
+    }
+
+    stopBackgroundMusic() {
+        if (this.backgroundMusic) {
+            this.backgroundMusic.pause();
+            this.backgroundMusic.currentTime = 0; // Reset to beginning
+        }
     }
 
     initWebAudio() {
